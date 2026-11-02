@@ -167,7 +167,7 @@ it("describes an elapsed compatibility date as overdue in the catalog UI", async
   const translate = i18n.t.bind(i18n);
   const translation = vi.spyOn(i18n, "t").mockImplementation((key, params) => {
     if (key === "pluginsPage.compatibilityDeprecatedOverdue") {
-      return `Compatibility window ended on ${params?.date}. Plugin author must migrate.`;
+      return `Migration date of ${params?.date} has passed. Plugin author must migrate.`;
     }
     return translate(key, params);
   });
@@ -177,7 +177,7 @@ it("describes an elapsed compatibility date as overdue in the catalog UI", async
     removalDate: "2026-10-01",
   });
   expect(container.textContent).toBe(
-    "Compatibility window ended on Oct 1, 2026. Plugin author must migrate. Details",
+    "Migration date of Oct 1, 2026 has passed. Plugin author must migrate. Details",
   );
 });
 
