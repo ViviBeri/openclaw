@@ -32,7 +32,7 @@ it("presents recorded members, replacement hints, and their approved final compa
   expect(buildPluginSdkDeprecationNotices("notice-unused")).toEqual([]);
 });
 
-it("describes an elapsed compatibility date as overdue and assigns migration to the plugin author", () => {
+it("describes a passed migration date and assigns migration to the plugin author", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-10-02T12:00:00.000Z"));
   try {
@@ -51,7 +51,7 @@ it("describes an elapsed compatibility date as overdue and assigns migration to 
       removalDate: "2026-10-01",
       migrationGuideUrl: "https://docs.openclaw.ai/plugins/sdk-migration/how-to-migrate",
     });
-    expect(notice?.message).toContain("compatibility window ended on Oct 1, 2026");
+    expect(notice?.message).toContain("migration date of Oct 1, 2026, which has passed");
     expect(notice?.message).toContain("The plugin author must migrate");
     expect(notice?.message).not.toContain("keeps working until then");
     expect(notice?.message).not.toContain("check for a plugin update");
