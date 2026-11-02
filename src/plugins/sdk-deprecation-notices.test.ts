@@ -44,17 +44,17 @@ it("describes an elapsed compatibility date as overdue without promising continu
       "2026-10-01",
     );
 
-    const [notice] = buildPluginSdkDeprecationNotices("notice-expired");
+    const notice = buildPluginSdkDeprecationNotices("notice-expired")[0];
     expect(notice).toMatchObject({
       code: "deprecated-sdk-api",
       severity: "info",
       removalDate: "2026-10-01",
       migrationGuideUrl: "https://docs.openclaw.ai/plugins/sdk-migration/how-to-migrate",
     });
-    expect(notice.message).toContain("compatibility window ended on Oct 1, 2026");
-    expect(notice.message).toContain("Migrate");
-    expect(notice.message).not.toContain("keeps working until then");
-    expect(notice.message).not.toContain("check for a plugin update");
+    expect(notice?.message).toContain("compatibility window ended on Oct 1, 2026");
+    expect(notice?.message).toContain("Migrate");
+    expect(notice?.message).not.toContain("keeps working until then");
+    expect(notice?.message).not.toContain("check for a plugin update");
   } finally {
     vi.useRealTimers();
   }
