@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import { recordPluginSdkDeprecatedImport } from "./sdk-deprecated-imports.js";
 import { buildPluginSdkDeprecationNotices } from "./sdk-deprecation-notices.js";
 import { recordPluginSdkDeprecationUsage } from "./sdk-deprecation-usage.js";
@@ -30,6 +30,34 @@ it("presents recorded members, replacement hints, and their approved final compa
     },
   ]);
   expect(buildPluginSdkDeprecationNotices("notice-unused")).toEqual([]);
+});
+
+it("describes an elapsed compatibility date as overdue without promising continued operation or an available update", () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-10-02T12:00:00.000Z"));
+  try {
+    recordPluginSdkDeprecationUsage(
+      "notice-expired",
+      "session-store:getSessionEntry",
+      "getSessionEntry",
+      "getSessionEntryAsync",
+      "2026-10-01",
+    );
+
+    const [notice] = buildPluginSdkDeprecationNotices("notice-expired");
+    expect(notice).toMatchObject({
+      code: "deprecated-sdk-api",
+      severity: "info",
+      removalDate: "2026-10-01",
+      migrationGuideUrl: "https://docs.openclaw.ai/plugins/sdk-migration/how-to-migrate",
+    });
+    expect(notice.message).toContain("compatibility window ended on Oct 1, 2026");
+    expect(notice.message).toContain("Migrate");
+    expect(notice.message).not.toContain("keeps working until then");
+    expect(notice.message).not.toContain("check for a plugin update");
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 it("keeps the earliest announced retirement visible alongside undated APIs", () => {
