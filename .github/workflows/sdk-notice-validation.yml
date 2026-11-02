@@ -42,11 +42,5 @@ jobs:
       - name: Verify Control UI translations
         run: pnpm ui:i18n:verify
 
-      - name: Check formatting of changed files
-        run: >-
-          pnpm exec prettier --check
-          src/plugins/sdk-deprecation-notices.ts
-          src/plugins/sdk-deprecation-notices.test.ts
-          ui/src/i18n/locales/en-plugin-management.ts
-          ui/src/pages/plugins/overview.tsx
-          ui/src/pages/plugins/catalog-detail.test.tsx
+      - name: Check repository formatting
+        run: pnpm format:check
