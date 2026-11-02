@@ -19,12 +19,15 @@ export function buildPluginSdkDeprecationNotices(pluginId: string): DeprecatedSd
         timeZone: "UTC",
       })
     : undefined;
+  const removalDateHasPassed = removalDate !== undefined && removalDate < new Date().toISOString().slice(0, 10);
   return [
     {
       code: "deprecated-sdk-api",
       severity: "info",
       message: formattedDate
-        ? `Uses OpenClaw APIs that retire on ${formattedDate}. It keeps working until then; check for a plugin update.`
+        ? removalDateHasPassed
+          ? `Uses OpenClaw APIs whose compatibility window ended on ${formattedDate}. Migrate to the replacement APIs; the scheduled removal date has passed.`
+          : `Uses OpenClaw APIs that retire on ${formattedDate}. It keeps working until then; check for a plugin update.`
         : "Uses older OpenClaw APIs. It keeps working for now; check for a plugin update.",
       ...(removalDate ? { removalDate } : {}),
       migrationGuideUrl: "https://docs.openclaw.ai/plugins/sdk-migration/how-to-migrate",
