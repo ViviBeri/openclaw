@@ -27,7 +27,7 @@ export function buildPluginSdkDeprecationNotices(pluginId: string): DeprecatedSd
       severity: "info",
       message: formattedDate
         ? removalDateHasPassed
-          ? `Uses OpenClaw APIs whose compatibility window ended on ${formattedDate}. The plugin author must migrate to the replacement APIs; the scheduled removal date has passed.`
+          ? `Uses OpenClaw APIs with a migration date of ${formattedDate}, which has passed. The plugin author must migrate to the replacement APIs.`
           : `Uses OpenClaw APIs that retire on ${formattedDate}. It keeps working until then; check for a plugin update.`
         : "Uses older OpenClaw APIs. It keeps working for now; check for a plugin update.",
       ...(removalDate ? { removalDate } : {}),
