@@ -1,0 +1,55 @@
+name: SDK notice regression validation
+
+on:
+  push:
+    branches:
+      - fix/190536-expired-sdk-notice-tests
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sdk-notice-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  focused-validation:
+    name: Focused SDK notice checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out PR branch
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12.15.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.2
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run backend SDK notice regression tests
+        run: pnpm test src/plugins/sdk-deprecation-notices.test.ts src/plugins/status.test.ts src/cli/plugins-cli.list.test.ts
+
+      - name: Run Control UI regression test
+        run: pnpm --dir ui test src/pages/plugins/catalog-detail.test.tsx
+
+      - name: Verify Control UI translations
+        run: pnpm ui:i18n:verify
+
+      - name: Check formatting of changed files
+        run: >-
+          pnpm exec prettier --check
+          src/plugins/sdk-deprecation-notices.ts
+          src/plugins/sdk-deprecation-notices.test.ts
+          ui/src/i18n/locales/en-plugin-management.ts
+          ui/src/pages/plugins/overview.tsx
+          ui/src/pages/plugins/catalog-detail.test.tsx
