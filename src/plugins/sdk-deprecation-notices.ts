@@ -19,7 +19,7 @@ export function buildPluginSdkDeprecationNotices(pluginId: string): DeprecatedSd
         timeZone: "UTC",
       })
     : undefined;
-  const removalDateHasPassed = removalDate !== undefined && removalDate < new Date().toISOString().slice(0, 10);
+  const today = new Date().toISOString().slice(0, 10);\n  const removalDateHasPassed = removalDate !== undefined && removalDate < today;
   return [
     {
       code: "deprecated-sdk-api",
