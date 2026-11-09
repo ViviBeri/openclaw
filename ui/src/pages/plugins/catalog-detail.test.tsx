@@ -163,7 +163,9 @@ it("describes an elapsed compatibility date as overdue in the catalog UI", async
   onTestFinished(captureI18nStateForTesting());
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-10-02T12:00:00.000Z"));
-  onTestFinished(() => vi.useRealTimers());
+  onTestFinished(() => {
+    vi.useRealTimers();
+  });
   const translate = i18n.t.bind(i18n);
   const translation = vi.spyOn(i18n, "t").mockImplementation((key, params) => {
     if (key === "pluginsPage.compatibilityDeprecatedOverdue") {
