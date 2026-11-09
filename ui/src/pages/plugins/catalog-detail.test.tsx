@@ -159,6 +159,30 @@ it("localizes a mounted compatibility notice from its structured removal date", 
   expect(container.textContent).toBe("Verwendet OpenClaw-APIs bis 31. Dez. 2026. Mehr erfahren");
 });
 
+it("describes an elapsed compatibility date as overdue in the catalog UI", async () => {
+  onTestFinished(captureI18nStateForTesting());
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-10-02T12:00:00.000Z"));
+  onTestFinished(() => {
+    vi.useRealTimers();
+  });
+  const translate = i18n.t.bind(i18n);
+  const translation = vi.spyOn(i18n, "t").mockImplementation((key, params) => {
+    if (key === "pluginsPage.compatibilityDeprecatedOverdue") {
+      return `Migration date of ${params?.date} has passed. Plugin author must migrate.`;
+    }
+    return translate(key, params);
+  });
+  onTestFinished(() => translation.mockRestore());
+  const { container } = renderNotice({
+    message: "Server-only English fallback",
+    removalDate: "2026-10-01",
+  });
+  expect(container.textContent).toBe(
+    "Migration date of Oct 1, 2026 has passed. Plugin author must migrate. Details",
+  );
+});
+
 it("uses catalog copy when a compatibility notice has no removal date", () => {
   const { container } = renderNotice({
     message: "Server-only English fallback",

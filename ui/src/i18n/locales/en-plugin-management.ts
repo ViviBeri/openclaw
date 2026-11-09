@@ -138,6 +138,8 @@ const enPluginManagement = {
   pluginsPage: {
     compatibilityDeprecatedDated:
       "Uses OpenClaw APIs that retire on {date}. It keeps working until then; check for a plugin update.",
+    compatibilityDeprecatedOverdue:
+      "Uses OpenClaw APIs with a migration date of {date}, which has passed. The plugin author must migrate to the replacement APIs.",
     compatibilityDeprecatedUndated:
       "Uses older OpenClaw APIs. It keeps working for now; check for a plugin update.",
     compatibilityDetails: "Details",
